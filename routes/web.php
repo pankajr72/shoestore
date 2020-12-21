@@ -22,3 +22,5 @@ Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])-
 Route::get('/admin/test', function () {
     return view('admin.test');
 })->name('test')->middleware('auth','admin');
+
+Route::resource('/admin/products/categories', App\Http\Controllers\CategoryController::class);

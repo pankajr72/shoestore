@@ -10,10 +10,13 @@
           crossorigin="anonymous"/>
 
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    
 
     @yield('third_party_stylesheets')
 
     @stack('page_css')
+
+    
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">

@@ -14,6 +14,12 @@
     @yield('third_party_stylesheets')
 
     @stack('page_css')
+
+    <style>
+        form .form-group label {
+            font-weight: 500 !important;
+        }
+    </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
