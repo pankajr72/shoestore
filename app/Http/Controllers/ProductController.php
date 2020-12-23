@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -14,7 +16,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::all();
+        return view('admin.products.index',['products' => $products]);
     }
 
     /**
@@ -24,7 +27,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $categories = \App\Models\Category::all();
+        return view('admin.products.create',['categories' => $categories]);
     }
 
     /**
@@ -35,7 +39,23 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validateData = $request->validate([
+            'category_id' => 'required',
+            'name' => 'required',
+            'price' => 'required',
+            'image' => 'required'
+        ]);
+
+        $product = new Product();
+        $product->category_id = $request->category_id;
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->price = $request->price;
+        $product->image = '/storage' . Str::substr(Storage::putFile('public/images',$request->image),6);
+        
+        $product->save();
+
+        return redirect()->route('products.index')->with('success', 'Product Successfully Added');
     }
 
     /**
@@ -46,7 +66,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        
     }
 
     /**
@@ -57,7 +77,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        $categories = \App\Models\Category::all();
+        return view('admin.products.edit',['categories' => $categories, 'product' => $product]);
     }
 
     /**
@@ -69,7 +90,21 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $validateData = $request->validate([
+            'category_id' => 'required',
+            'name' => 'required',
+            'price' => 'required',
+        ]);
+
+        $product->category_id = $request->category_id;
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->price = $request->price;
+        if($request->image != null)
+            $product->image = '/storage' . Str::substr(Storage::putFile('public/images',$request->image),6);        
+        $product->save();
+
+        return redirect()->route('products.index')->with('success', 'Product Successfully Updated');
     }
 
     /**
@@ -80,6 +115,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $product->delete();
+
+        return redirect()->route('products.index')->with('success', 'Product Successfully Removed');
     }
 }

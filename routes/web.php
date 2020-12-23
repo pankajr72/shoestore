@@ -23,4 +23,6 @@ Route::get('/admin/test', function () {
     return view('admin.test');
 })->name('test')->middleware('auth','admin');
 
-Route::resource('/admin/products/categories', App\Http\Controllers\CategoryController::class);
+Route::resource('/admin/products/categories', App\Http\Controllers\CategoryController::class)->middleware('auth','admin');
+
+Route::resource('/admin/products/products', App\Http\Controllers\ProductController::class)->middleware('auth','admin');
