@@ -14,7 +14,8 @@ class ProductAttributeController extends Controller
      */
     public function index()
     {
-        //
+        $productAttributes = ProductAttribute::all();
+        return view('admin.products_attributes.index',['productAttributes' => $productAttributes]);
     }
 
     /**
@@ -24,7 +25,8 @@ class ProductAttributeController extends Controller
      */
     public function create()
     {
-        //
+        $products = \App\Models\Product::all();
+        return view('admin.products_attributes.create',['products' => $products]);
     }
 
     /**
@@ -35,7 +37,16 @@ class ProductAttributeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validateData = $request->validate([
+            'product_id' => 'required',
+            'size' => 'required',
+            'stock' => 'required'
+        ]);
+
+        $productAttribute = new ProductAttribute($request->all());
+        $productAttribute->save();
+
+        return redirect()->route('product-attributes.index')->with('success', 'Product Attributes Successfully Added');
     }
 
     /**
@@ -57,7 +68,8 @@ class ProductAttributeController extends Controller
      */
     public function edit(ProductAttribute $productAttribute)
     {
-        //
+        $products = \App\Models\Product::all();
+        return view('admin.products_attributes.edit',['products' => $products, 'productAttribute' => $productAttribute]);
     }
 
     /**
@@ -69,7 +81,16 @@ class ProductAttributeController extends Controller
      */
     public function update(Request $request, ProductAttribute $productAttribute)
     {
-        //
+        $validateData = $request->validate([
+            'product_id' => 'required',
+            'size' => 'required',
+            'stock' => 'required'
+        ]);
+
+        $productAttribute->fill($request->all());
+        $productAttribute->save();
+
+        return redirect()->route('product-attributes.index')->with('success', 'Product Attributes Successfully Updated');
     }
 
     /**
@@ -80,6 +101,9 @@ class ProductAttributeController extends Controller
      */
     public function destroy(ProductAttribute $productAttribute)
     {
-        //
+        $productAttribute->delete();
+
+        return redirect()->route('product-attributes.index')->with('success', 'Product Attributes Successfully Deleted');
+
     }
 }
