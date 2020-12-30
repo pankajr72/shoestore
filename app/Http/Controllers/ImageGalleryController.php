@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ImageGallery;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ImageGalleryController extends Controller
 {
@@ -14,7 +16,8 @@ class ImageGalleryController extends Controller
      */
     public function index()
     {
-        //
+        $imageGalleries = ImageGallery::all();
+        return view('admin.image_gallery.index',['imageGalleries' => $imageGalleries]);
     }
 
     /**
@@ -24,7 +27,8 @@ class ImageGalleryController extends Controller
      */
     public function create()
     {
-        //
+        $products = \App\Models\Product::all();
+        return view('admin.image_gallery.create',['products' => $products]);
     }
 
     /**
@@ -35,7 +39,18 @@ class ImageGalleryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validateData = $request->validate([
+            'product_id' => 'required',
+            'image' => 'required'
+        ]);
+
+        $imageGallery = new ImageGallery();
+        $imageGallery->product_id = $request->product_id;
+        $imageGallery->image = '/storage' . Str::substr(Storage::putFile('public/images',$request->image),6);
+        
+        $imageGallery->save();
+
+        return redirect()->route('image-galleries.index')->with('success', 'Product Image Successfully Added');
     }
 
     /**
@@ -57,7 +72,8 @@ class ImageGalleryController extends Controller
      */
     public function edit(ImageGallery $imageGallery)
     {
-        //
+        $products = \App\Models\Product::all();
+        return view('admin.image_gallery.edi    t',['products' => $products, 'imageGallery' => $imageGallery]);
     }
 
     /**
@@ -69,7 +85,17 @@ class ImageGalleryController extends Controller
      */
     public function update(Request $request, ImageGallery $imageGallery)
     {
-        //
+        $validateData = $request->validate([
+            'product_id' => 'required'
+        ]);
+
+        $imageGallery->product_id = $request->product_id;
+        if($request->image != null)
+            $imageGallery->image = '/storage' . Str::substr(Storage::putFile('public/images',$request->image),6);
+        
+        $imageGallery->save();
+
+        return redirect()->route('image-galleries.index')->with('success', 'Product Image Successfully Added');
     }
 
     /**
@@ -80,6 +106,9 @@ class ImageGalleryController extends Controller
      */
     public function destroy(ImageGallery $imageGallery)
     {
-        //
+        $imageGallery->delete();
+
+        return redirect()->route('image-galleries.index')->with('success', 'Product Image Successfully Removed');
+
     }
 }

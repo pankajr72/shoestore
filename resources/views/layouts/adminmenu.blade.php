@@ -44,7 +44,7 @@
         </a>
         </li>
         <li class="nav-item">
-        <a href="" class="nav-link {{ $seg3 == 'products-images' ? 'active' : '' }}">
+        <a href="{{ route('image-galleries.index') }}" class="nav-link {{ $seg3 == 'image-galleries' ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Product Images</p>
         </a>
